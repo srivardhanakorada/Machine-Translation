@@ -50,8 +50,11 @@ cd hosting_dir
 uvicorn app:app --host 0.0.0.0 --port 8000 --workers 1
 ```
 
-From limited training on 30,000 English–French sentence pairs, the model achieved a sacreBLEU score of 46.2 after fine-tuning, indicating strong translation performance for a lightweight setup.
+From limited training on 30,000 English–French sentence pairs, the model achieved a sacreBLEU score of 46.2 after fine-tuning, an improvement from 42.3 of the base T5 model, indicating strong translation performance for a lightweight setup.
 
+[![Watch the Translation Demo](https://img.youtube.com/vi/MxpXTdcTByM/hqdefault.jpg)](https://youtu.be/MxpXTdcTByM)
+
+Click the image above to watch the translation demonstration on YouTube.
 
 ## Planned Future Extensions
 1. Extend to support to multiple languages
