@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICE=0 nohup python -W ignore src/t5_translate.py > t5_translate_simple.out 2>&1 & echo $!

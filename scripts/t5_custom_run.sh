@@ -1,0 +1,1 @@
+nohup python -W ignore src/t5_custom_translate.py > t5_translate_custom.out 2>&1 & echo $!

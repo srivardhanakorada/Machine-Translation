@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>English → French Translator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+</head>
+<body>
+  <div class="bg-gradient"></div>
+
+  <header class="header">
+    <div class="brand">
+      <div class="logo">
+        <span class="sparkle">✦</span>
+      </div>
+      <div>
+        <h1>English → French</h1>
+        <p class="subtitle">Neural Translator</p>
+      </div>
+    </div>
+    <nav class="header-actions">
+      <button id="themeToggle" class="ghost-btn" aria-label="Toggle theme">☾</button>
+      <a class="ghost-btn" href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <form action="/translate" method="post" id="translateForm">
+        <label class="field-label" for="english_text">Enter English text</label>
+        <div class="textarea-wrap">
+          <textarea id="english_text" name="english_text" rows="5" placeholder="Type or paste your English text here…">{{ english_text or '' }}</textarea>
+          <div class="char-counter" id="charCounter">0</div>
+        </div>
+
+        <div class="controls">
+          <div class="left">
+            <label class="toggle">
+              <input type="checkbox" id="beamToggle" name="use_beam" {% if use_beam %}checked{% endif %}>
+              <span>Higher quality (beam search)</span>
+            </label>
+          </div>
+          <div class="right">
+            <button type="button" id="clearBtn" class="ghost-btn">Clear</button>
+            <button type="submit" class="primary-btn" id="submitBtn">
+              <span class="spinner" id="spinner" aria-hidden="true"></span>
+              Translate
+            </button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    {% if translated_text %}
+    <section class="card result-card">
+      <div class="result-header">
+        <h3>Translated Text</h3>
+        <div class="result-actions">
+          <button class="ghost-btn" id="copyBtn" data-copy="{{ translated_text|e }}">Copy</button>
+        </div>
+      </div>
+      <p class="result-text">{{ translated_text }}</p>
+    </section>
+    {% endif %}
+  </main>
+
+  <footer class="footer">
+    <p>Powered by T5 • <span id="latencyLabel">{% if latency_ms %}{{ latency_ms }} ms{% else %}&nbsp;{% endif %}</span></p>
+  </footer>
+
+  <script>
+    // Theme toggle (light/dark)
+    const themeBtn = document.getElementById('themeToggle');
+    themeBtn?.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+    });
+
+    // Autosize textarea + char count
+    const ta = document.getElementById('english_text');
+    const counter = document.getElementById('charCounter');
+    function autosize() {
+      ta.style.height = 'auto';
+      ta.style.height = Math.min(ta.scrollHeight, 320) + 'px';
+      if (counter) counter.textContent = ta.value.length;
+    }
+    ta?.addEventListener('input', autosize);
+    window.addEventListener('load', autosize);
+
+    // Clear input
+    document.getElementById('clearBtn')?.addEventListener('click', () => {
+      ta.value = '';
+      autosize();
+      ta.focus();
+    });
+
+    // Loading state on submit
+    const form = document.getElementById('translateForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const spinner = document.getElementById('spinner');
+    form?.addEventListener('submit', () => {
+      submitBtn.classList.add('loading');
+      spinner.style.display = 'inline-block';
+    });
+
+    // Copy to clipboard
+    document.getElementById('copyBtn')?.addEventListener('click', (e) => {
+      const text = e.currentTarget.getAttribute('data-copy') || '';
+      navigator.clipboard.writeText(text);
+      e.currentTarget.textContent = 'Copied!';
+      setTimeout(() => (e.currentTarget.textContent = 'Copy'), 1200);
+    });
+  </script>
+</body>
+</html>
