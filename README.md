@@ -34,6 +34,7 @@ python -W ignore src/machine_translation.py
 ```
 This process fine-tunes the T5 model with LoRA adapters attached to the Query and Value projection matrices for 10 epochs, using a learning rate of 5e-5 and a linear scheduler with no warmup steps.
 The trained adapters are saved in the artifacts directory.
+
 4. Assemble the Full Model
 Integrate the trained adapters with the base T5 model using:
 ```bash
